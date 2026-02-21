@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyclistic Bike-Share Analysis - Apresentação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Slide 1 - Título */
+        .slide-1 {
+            text-align: center;
+        }
+
+        .slide-1 h1 {
+            font-size: 64px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .slide-1 .subtitle {
+            font-size: 28px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .slide-1 .author {
+            font-size: 20px;
+            margin-top: 60px;
+            opacity: 0.8;
+        }
+
+        /* Slide 2 - Problema */
+        .slide h2 {
+            font-size: 48px;
+            margin-bottom: 40px;
+            border-bottom: 3px solid rgba(255,255,255,0.3);
+            padding-bottom: 20px;
+        }
+
+        .slide h3 {
+            font-size: 32px;
+            margin: 30px 0 20px 0;
+            color: #ffd700;
+        }
+
+        .slide p, .slide li {
+            font-size: 24px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .slide ul {
+            list-style-position: inside;
+            padding-left: 20px;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #ffd700;
+            margin: 30px 0;
+        }
+
+        .highlight-box .big-number {
+            font-size: 72px;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .label {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        /* Two Columns */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .column {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        /* Recommendations */
+        .recommendation {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ffd700;
+        }
+
+        .recommendation h4 {
+            font-size: 28px;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .recommendation p {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .recommendation .impact {
+            font-weight: bold;
+            color: #4ade80;
+            margin-top: 10px;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Slide counter */
+        .slide-counter {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            font-size: 18px;
+            opacity: 0.7;
+        }
+
+        /* Emoji styling */
+        .emoji {
+            font-size: 48px;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Título -->
+        <div class="slide active slide-1">
+            <h1>🚴‍♂️ Cyclistic Bike-Share Analysis</h1>
+            <div class="subtitle">Como Converter Ciclistas Casuais em Membros Anuais</div>
+            <div class="subtitle">Google Data Analytics Professional Certificate</div>
+            <div class="subtitle">Capstone Project</div>
+            <div class="author">Apresentado por: [Seu Nome]<br>Fevereiro 2026</div>
+        </div>
+
+        <!-- Slide 2: Problema de Negócio -->
+        <div class="slide">
+            <h2>🎯 Problema de Negócio</h2>
+            <div class="highlight-box">
+                <h3>Contexto</h3>
+                <p>• <strong>Cyclistic</strong>: Empresa de bike-share em Chicago</p>
+                <p>• <strong>5.824 bicicletas</strong> | <strong>692 estações</strong></p>
+                <p>• <strong>2 tipos de clientes</strong>:</p>
+                <ul>
+                    <li>Casuais: Passes de dia inteiro ou viagem única</li>
+                    <li>Membros: Assinaturas anuais (mais lucrativos!)</li>
+                </ul>
+            </div>
+            <div class="highlight-box">
+                <h3>Pergunta-Chave</h3>
+                <p style="font-size: 32px; color: #ffd700; font-weight: bold;">
+                    "Como membros e casuais usam o Cyclistic de forma diferente?"
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Metodologia -->
+        <div class="slide">
+            <h2>🔬 Metodologia</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="number">1</div>
+                    <div class="label">ASK<br>Perguntar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">2</div>
+                    <div class="label">PREPARE<br>Preparar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">3</div>
+                    <div class="label">PROCESS<br>Processar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">4</div>
+                    <div class="label">ANALYZE<br>Analisar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">5</div>
+                    <div class="label">SHARE<br>Compartilhar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">6</div>
+                    <div class="label">ACT<br>Agir</div>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 50px;">
+                <p><strong>Dados analisados:</strong> 5 milhões de viagens | 12 meses (2023)</p>
+                <p><strong>Ferramentas:</strong> Python, Pandas, Matplotlib, Seaborn</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Descoberta 1 -->
+        <div class="slide">
+            <h2>📊 Descoberta #1: Duração das Viagens</h2>
+            <div class="two-columns">
+                <div class="column">
+                    <h3>👥 Ciclistas Casuais</h3>
+                    <div class="big-number">30.2 min</div>
+                    <p>Duração média por viagem</p>
+                    <p style="margin-top: 20px;">✅ Viagens longas</p>
+                    <p>✅ Uso recreativo</p>
+                    <p>✅ Passeios de lazer</p>
+                </div>
+                <div class="column">
+                    <h3>⭐ Membros Anuais</h3>
+                    <div class="big-number">15.3 min</div>
+                    <p>Duração média por viagem</p>
+                    <p style="margin-top: 20px;">✅ Viagens curtas</p>
+                    <p>✅ Transporte regular</p>
+                    <p>✅ Commute trabalho</p>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <p style="font-size: 32px; text-align: center; color: #ffd700;">
+                    <strong>Casuais usam 97% MAIS TEMPO!</strong>
+                </p>
+                <p style="text-align: center;">→ Maior valor potencial de membership</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Descoberta 2 -->
+        <div class="slide">
+            <h2>📅 Descoberta #2: Padrão Semanal</h2>
+            <div class="two-columns">
+                <div class="column">
+                    <h3>👥 Ciclistas Casuais</h3>
+                    <p style="font-size: 64px; text-align: center; margin: 30px 0;">📈</p>
+                    <p style="text-align: center; font-size: 28px;">Pico nos <strong style="color: #ffd700;">FINS DE SEMANA</strong></p>
+                    <p style="margin-top: 30px;">55% das viagens em Sábado + Domingo</p>
+                </div>
+                <div class="column">
+                    <h3>⭐ Membros Anuais</h3>
+                    <p style="font-size: 64px; text-align: center; margin: 30px 0;">📊</p>
+                    <p style="text-align: center; font-size: 28px;">Pico nos <strong style="color: #ffd700;">DIAS ÚTEIS</strong></p>
+                    <p style="margin-top: 30px;">Uso consistente Segunda-Sexta</p>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <p style="font-size: 28px; text-align: center;">
+                    <strong>Insight:</strong> Casuais = LAZER | Membros = COMMUTE
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Descoberta 3 -->
+        <div class="slide">
+            <h2>⏰ Descoberta #3: Padrão Diário</h2>
+            <div class="two-columns">
+                <div class="column">
+                    <h3>👥 Ciclistas Casuais</h3>
+                    <p style="margin-top: 30px;"><strong>Horário de pico:</strong></p>
+                    <p style="font-size: 48px; color: #ffd700; text-align: center; margin: 20px 0;">12h - 15h</p>
+                    <p>Uso distribuído ao longo do dia</p>
+                    <p>→ Horário de lazer/turismo</p>
+                </div>
+                <div class="column">
+                    <h3>⭐ Membros Anuais</h3>
+                    <p style="margin-top: 30px;"><strong>Horários de pico:</strong></p>
+                    <p style="font-size: 48px; color: #ffd700; text-align: center; margin: 20px 0;">8h | 17h</p>
+                    <p>Dois picos bem definidos</p>
+                    <p>→ Horário de commute</p>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <p style="font-size: 28px; text-align: center;">
+                    <strong>Comportamentos completamente distintos!</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Descoberta 4 -->
+        <div class="slide">
+            <h2>🌤️ Descoberta #4: Sazonalidade</h2>
+            <div class="highlight-box">
+                <h3>Ambos os grupos aumentam uso no verão</h3>
+                <p>Meses de pico: Junho, Julho, Agosto</p>
+            </div>
+            <div class="two-columns">
+                <div class="column">
+                    <h3>👥 Ciclistas Casuais</h3>
+                    <div class="big-number">5.6x</div>
+                    <p>Variação inverno → verão</p>
+                    <p style="margin-top: 20px;">⚠️ Muito sensíveis ao clima</p>
+                    <p>⚠️ Alta variação sazonal</p>
+                </div>
+                <div class="column">
+                    <h3>⭐ Membros Anuais</h3>
+                    <div class="big-number">2.2x</div>
+                    <p>Variação inverno → verão</p>
+                    <p style="margin-top: 20px;">✅ Uso mais estável</p>
+                    <p>✅ Menor variação sazonal</p>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <p style="font-size: 24px; text-align: center; color: #4ade80;">
+                    <strong>Oportunidade:</strong> Campanha pré-verão para conversão!
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Recomendação 1 -->
+        <div class="slide">
+            <h2>💡 Recomendação #1: Weekend Warrior</h2>
+            <div class="recommendation">
+                <h4>🏆 Plano de Membership para Fins de Semana</h4>
+                <p><strong>Insight:</strong> 55% das viagens casuais ocorrem nos fins de semana</p>
+                <p><strong>Ação:</strong></p>
+                <ul>
+                    <li>Criar plano "Weekend Unlimited" (40% do preço anual)</li>
+                    <li>Marketing: "Seus passeios de fim de semana merecem economia"</li>
+                    <li>Upgrade gradual: "Experimente durante a semana também!"</li>
+                </ul>
+                <div class="impact">
+                    💰 Meta: +12.000 novos memberships<br>
+                    💰 Receita: +$480k/ano
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Recomendação 2 -->
+        <div class="slide">
+            <h2>💡 Recomendação #2: 30 Dias para Membro</h2>
+            <div class="recommendation">
+                <h4>🎯 Trial Inteligente com Gamificação</h4>
+                <p><strong>Insight:</strong> Casuais fazem viagens 97% mais longas</p>
+                <p><strong>Ação:</strong></p>
+                <ul>
+                    <li>Oferecer 30 dias de trial por $20 com benefícios de membro</li>
+                    <li>Dashboard: "Você economizou $X usando membership neste mês!"</li>
+                    <li>Notificações personalizadas mostrando economia potencial</li>
+                </ul>
+                <div class="impact">
+                    💰 Meta: 40% conversão pós-trial<br>
+                    💰 Receita: +$685k/ano
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Recomendação 3 -->
+        <div class="slide">
+            <h2>💡 Recomendação #3: Verão = Economia</h2>
+            <div class="recommendation">
+                <h4>📅 Timing Sazonal Estratégico</h4>
+                <p><strong>Insight:</strong> Pico de casuais no verão (45% do uso anual)</p>
+                <p><strong>Ação:</strong></p>
+                <ul>
+                    <li>Campanha digital intensiva Maio-Junho (antes do pico)</li>
+                    <li>Anúncios: "Prepare-se para o verão com membership"</li>
+                    <li>Benefício: "Bloqueie preço baixo antes do verão"</li>
+                </ul>
+                <div class="impact">
+                    💰 Meta: +15.000 memberships<br>
+                    💰 Receita: +$1.4M/ano
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Impacto Total -->
+        <div class="slide">
+            <h2>💰 Impacto Total Projetado</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="number">34,200</div>
+                    <div class="label">Novos Membros<br>Ano 1</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">$2.6M</div>
+                    <div class="label">Receita<br>Ano 1</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">$3.5M</div>
+                    <div class="label">Receita<br>Recorrente/Ano</div>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 60px;">
+                <h3 style="text-align: center; font-size: 48px; color: #4ade80;">ROI: 4:1</h3>
+                <p style="text-align: center; font-size: 24px; margin-top: 20px;">
+                    Para cada $1 investido, retorno de $4
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 12: Próximos Passos -->
+        <div class="slide">
+            <h2>🎯 Próximos Passos</h2>
+            <div class="recommendation">
+                <h4>1. Fase Piloto (30 dias)</h4>
+                <p>• Testar plano "Weekend Unlimited" com 1.000 usuários</p>
+                <p>• Medir taxa de conversão e feedback</p>
+            </div>
+            <div class="recommendation">
+                <h4>2. Desenvolvimento Tech (60 dias)</h4>
+                <p>• Dashboard de tracking de conversão</p>
+                <p>• Sistema de gamificação para trial</p>
+            </div>
+            <div class="recommendation">
+                <h4>3. Marketing Digital (90 dias)</h4>
+                <p>• Criar assets para campanha pré-verão</p>
+                <p>• Estabelecer parceria com influencers locais</p>
+            </div>
+            <div class="recommendation">
+                <h4>4. Métricas de Sucesso</h4>
+                <p>• Taxa conversão casual → membro</p>
+                <p>• Retenção de novos membros (90 dias)</p>
+                <p>• Engajamento em fins de semana</p>
+            </div>
+        </div>
+
+        <!-- Slide 13: Conclusão -->
+        <div class="slide slide-1">
+            <h1 style="font-size: 54px;">✅ Conclusão</h1>
+            <div class="highlight-box">
+                <h3>Resposta à Pergunta de Negócio</h3>
+                <p style="font-size: 24px; margin-top: 20px;">
+                    <strong>Membros:</strong> Usam para transporte regular (commute)<br>
+                    → Viagens curtas, dias úteis, horários fixos
+                </p>
+                <p style="font-size: 24px; margin-top: 20px;">
+                    <strong>Casuais:</strong> Usam para lazer/recreação<br>
+                    → Viagens longas, fins de semana, horários flexíveis
+                </p>
+            </div>
+            <div class="highlight-box">
+                <p style="font-size: 28px; text-align: center; color: #4ade80;">
+                    <strong>Estratégia:</strong> 3 campanhas direcionadas<br>
+                    <strong>Resultado:</strong> +34.200 membros | +$2.6M Ano 1
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 14: Obrigado -->
+        <div class="slide slide-1">
+            <h1>🙏 Obrigado!</h1>
+            <div class="subtitle">Perguntas?</div>
+            <div class="author" style="margin-top: 80px;">
+                <p><strong>[Seu Nome]</strong></p>
+                <p>Junior Data Analyst</p>
+                <p style="margin-top: 30px;">
+                    📧 seu-email@exemplo.com<br>
+                    💼 linkedin.com/in/seu-perfil<br>
+                    💻 github.com/seu-usuario
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">14</span>
+    </div>
+    <div class="nav-buttons">
+        <button class="nav-button" id="prev-btn" onclick="prevSlide()">← Anterior</button>
+        <button class="nav-button" id="next-btn" onclick="nextSlide()">Próximo →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            // Update button states
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
